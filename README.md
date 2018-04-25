@@ -1,4 +1,4 @@
-# DataStructure
+# Algorithm and Data Structure
 
 There are all data structures available on Python.org
 
