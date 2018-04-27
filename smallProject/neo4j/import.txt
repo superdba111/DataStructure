@@ -1,0 +1,103 @@
+// ========================================================================================================================
+// Constraints
+// ========================================================================================================================
+
+CREATE CONSTRAINT ON (n:Opportunity) ASSERT n.OppID IS UNIQUE;
+CREATE CONSTRAINT ON (n:Account) ASSERT n.AccID IS UNIQUE;
+CREATE CONSTRAINT ON (n:Bid) ASSERT n.BidNum IS UNIQUE;
+CREATE CONSTRAINT ON (n:FieldDevelopment) ASSERT n.FieldDevName IS UNIQUE;
+CREATE CONSTRAINT ON (n:Vessel) ASSERT n.VesselName IS UNIQUE;
+CREATE CONSTRAINT ON (n:Rig) ASSERT n.RigName IS UNIQUE;
+
+
+// ========================================================================================================================
+// Nodes
+// ========================================================================================================================
+
+USING PERIODIC COMMIT 1000
+LOAD CSV WITH HEADERS FROM "file:///crm16.csv" AS line
+MERGE (o:Opportunity {OppID:toInteger(line.OppID)})
+ON CREATE SET o.OppName = line.OppName, o.Status = line.Status, o.OppType = line.OppType, o.oppOwnerName = line.oppOwnerName,
+              o.ProductType = line.ProductType, o.Probability = line.Probability, o.JP$ = line.JP$, o.`JP%` = line.`JP%`, 
+              o.SalesStage = line.SalesStage, o.SalesArea = line.SalesArea, o.oppCreationDate = line.oppCreationDate
+RETURN COUNT(*);
+
+USING PERIODIC COMMIT 1000
+LOAD CSV WITH HEADERS FROM "file:///crm16.csv" AS line
+MERGE (a:Account {AccID:toInteger(line.AccID)})
+ON CREATE SET a.accStatus = line.accStatus, a.accName = line.accName, a.accCreatedBy = line.accCreatedBy, 
+              a.accCreationDate = line.accCreationDate, a.accLastUpdateDate = line.accLastUpdateDate, 
+              a.accLastUpdatedBy = line.accLastUpdatedBy, a.AccRecordType = line.AccRecordType, 
+              a.AccSite = line.AccSite, a.industry = line.industry, a.accOwnerName = line.accOwnerName, 
+              a.accPrimaryContactName = line.accPrimaryContactName
+RETURN COUNT(*);
+
+USING PERIODIC COMMIT 1000
+LOAD CSV WITH HEADERS FROM "file:///crm16.csv" AS line
+MERGE (b:Bid {BidNum:line.BidNum})
+ON CREATE SET b.BidName = line.BidName, b.BidSubDate = line.BidSubDate, b.BidAmount = line.BidAmount, b.bidRFQReceived = line.bidRFQReceived, 
+              b.bidStartDate = line.bidStartDate, b.bidTargetDate = line.bidTargetDate, b.bidTotalCosts = line.bidTotalCosts, 
+              b.bidMaterialCosts = line.bidMaterialCosts, b.bidLaborCosts = line.bidLaborCosts, b.bidRecordType = line.bidRecordType, 
+              b.bidStage = line.bidStage, b.bidStatus = line.bidStatus, b.bidApprovalProcess = line.bidApprovalProcess, 
+              b.bidAwardDate = line.bidAwardDate, b.bidJP = line.bidJP, b.`bidJP%` = line.`bidJP%`, b.bidCM = line.bidCM, 
+              b.`bidCM%` = line.`bidCM%`, b.BidType = line.BidType, b.bidSalesArea = line.bidSalesArea, b.bidCreatedBy = line.bidCreatedBy, 
+              b.bidCreationDate = line.bidCreationDate, b.bidLastUpdate = line.bidLastUpdate
+RETURN COUNT(*);
+
+USING PERIODIC COMMIT 1000
+LOAD CSV WITH HEADERS FROM "file:///crm16.csv" AS line
+MERGE (f:FieldDevelopment {FieldDevName:line.FieldDevName})
+ON CREATE SET f.fdCreatedBy = line.fdCreatedBy, f.fdCreationDate = line.fdCreationDate, f.fdLastUpdatedBy = line.fdLastUpdatedBy, 
+              f.fdLastUpdateDate = line.fdLastUpdateDate, f.fdOperator1 = line.fdOperator1, f.fdRegion = line.fdRegion, f.fdLocation = line.fdLocation, 
+              f.fdBlockDesignation = line.fdBlockDesignation, f.fdSubseaIQLink = line.fdSubseaIQLink, f.fdStatus = line.fdStatus, 
+              f.fdDevType = line.fdDevType, f.fdStage = line.fdStage, f.fdProbability = line.fdProbability, f.fdFirstOilDate = line.fdFirstOilDate
+RETURN COUNT(*);
+
+USING PERIODIC COMMIT 1000
+LOAD CSV WITH HEADERS FROM "file:///crm16.csv" AS line
+WITH line WHERE line.VesselName IS NOT NULL
+MERGE (v:Vessel {VesselName:line.VesselName})
+ON CREATE SET v.vessCreatedBy = line.vessCreatedBy, v.vessCreationDate = line.vessCreationDate, v.vessLastUpdatedBy = line.vessLastUpdatedBy,
+              v.vessLastUpdateDate = line.vessLastUpdateDate, v.vessType = line.vessType, v.vessStatus = line.vessStatus, 
+              v.vessYearBuilt = line.vessYearBuilt, v.HullType = line.HullType, v.vessOwner = line.vessOwner 
+RETURN COUNT(*);
+
+USING PERIODIC COMMIT 1000
+LOAD CSV WITH HEADERS FROM "file:///crm16.csv" AS line
+WITH line WHERE line.RigName IS NOT NULL
+MERGE (r:Rig {RigName:line.RigName})
+ON CREATE SET r.rigCreatedBy = line.rigCreatedBy, r.rigCreationDate = line.rigCreationDate, r.RigStatus = line.RigStatus, 
+              r.rigBuildLocation = line.rigBuildLocation, r.rigRegion = line.rigRegion, r.rigLocation = line.rigLocation, 
+              r.WellName = line.WellName, r.`rigWin/Loss` = line.`rigWin/Loss`, r.rigType = line.rigType, r.RigWaterDepth = line.RigWaterDepth, 
+              r.rigOperator = line.rigOperator, r.rigOrderDate = line.rigOrderDate, r.rigDeliveryDate = line.rigDeliveryDate, 
+              r.rigYearInService = line.rigYearInService, r.ROVAwardDate = line.ROVAwardDate, r.ROVOperator = line.ROVOperator 
+RETURN COUNT(*);
+
+
+// ========================================================================================================================
+// Relationships
+// ========================================================================================================================
+
+
+USING PERIODIC COMMIT 1000
+LOAD CSV WITH HEADERS FROM "file:///crm16.csv" AS line
+MATCH (b:Bid {BidNum:line.BidNum}), (o:Opportunity {OppID:toInteger(line.OppID)})
+MERGE (b)<-[:HAS_BID]-(o);
+
+USING PERIODIC COMMIT 1000
+LOAD CSV WITH HEADERS FROM "file:///crm16.csv" AS line
+MATCH (f:FieldDevelopment {FieldDevName:line.FieldDevName}), (a:Account {AccID:toInteger(line.AccID)})
+MERGE (f)-[:HAS_ACCOUNT]->(a);
+
+USING PERIODIC COMMIT 1000
+LOAD CSV WITH HEADERS FROM "file:///crm16.csv" AS line
+MATCH (v:Vessel {VesselName:line.VesselName}), (o:Opportunity {OppID:toInteger(line.OppID)})
+MERGE (v)<-[:HAS_VESSEL]-(o);
+
+USING PERIODIC COMMIT 1000
+LOAD CSV WITH HEADERS FROM "file:///crm16.csv" AS line
+MATCH (r:Rig {RigName:line.RigName}), (o:Opportunity {OppID:toInteger(line.OppID)})
+MERGE (r)<-[:HAS_RIG]-(o);
+
+
+

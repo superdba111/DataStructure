@@ -1,0 +1,17 @@
+CREATE CONSTRAINT ON (n:Operator) ASSERT n.OperatorId IS UNIQUE;
+CREATE CONSTRAINT ON (m:Field) ASSERT m.FieldId IS UNIQUE;
+
+
+USING PERIODIC COMMIT 1000
+LOAD CSV WITH HEADERS FROM "file:///C:/fieldDB.csv" AS line
+MERGE (n:Operator {OperatorName:line.Operator, OperatorGroup:line.OperatorGroup, OperatorID:toInteger(line.OperatorId), OperatorType:line.OperatorType, Holdings:line.Holdings})
+MERGE (m:Field {FieldId:toInteger(line.FieldId), FieldName:line.FieldName, Status:line.Status, FieldReservesType:line.FieldReservesType, DevelopmentType:line.DevelopmentType})
+MERGE (m)-[:OperatedBy {OperatorId:line.OperatorId}]->(n)
+MERGE (k:FieldDate {OnStreamDate:line.OnStreamDate, DiscoveryDate:line.DiscoveryDate, UpdateDate:line.UpdateDate, NextUpdateDate:line.NextUpdateDate, DepletionDate:line.DepletionDate} )
+MERGE (m)-[:When {DiscoveryDate:line.DiscoveryDate}] ->(k)
+MERGE (r:Region {Region:line.Region, Country:line.Country})
+MERGE (m)-[:has {Region:line.Region}] ->(r)
+MERGE (l:Location {Location:line.Location, Latitude:line.Latitude, Longitude:line.Longitude})
+MERGE (m)-[:located {Location:line.Location}] ->(l)
+MERGE (g:GasOilFact{OilProductionRateBPD:line.OilProductionRateBPD, OilReservesMMBBL:line.OilReservesMMBBL, GasEstimate:line.GasEstimate, GasReservesBCF:line.GasReservesBCF, WaterDepth:line.WaterDepth })
+MERGE (g)-[:producedIn {FieldId:line.FieldId}] ->(m)

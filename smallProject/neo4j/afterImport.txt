@@ -1,0 +1,19 @@
+made the error of importing the data as is, instead of converting to numbers when necessary. To fix it run this query:
+
+MATCH (b:Bid)
+SET b.BidAmount = toFloat(b.BidAmount)
+
+To fix this in the import, 
+
+USING PERIODIC COMMIT 1000
+LOAD CSV WITH HEADERS FROM "file:///crm16.csv" AS line
+MERGE (b:Bid {BidNum:line.BidNum})
+ON CREATE SET b.BidName = line.BidName, b.BidSubDate = line.BidSubDate, b.BidAmount = toFloat(line.BidAmount), b.bidRFQReceived = line.bidRFQReceived, 
+              b.bidStartDate = line.bidStartDate, b.bidTargetDate = line.bidTargetDate, b.bidTotalCosts = toFloat(line.bidTotalCosts), 
+              b.bidMaterialCosts = toFloat(line.bidMaterialCosts), b.bidLaborCosts = toFloat(line.bidLaborCosts), b.bidRecordType = line.bidRecordType, 
+              b.bidStage = line.bidStage, b.bidStatus = line.bidStatus, b.bidApprovalProcess = line.bidApprovalProcess, 
+              b.bidAwardDate = line.bidAwardDate, b.bidJP = line.bidJP, b.`bidJP%` = line.`bidJP%`, b.bidCM = line.bidCM, 
+              b.`bidCM%` = line.`bidCM%`, b.BidType = line.BidType, b.bidSalesArea = line.bidSalesArea, b.bidCreatedBy = line.bidCreatedBy, 
+              b.bidCreationDate = line.bidCreationDate, b.bidLastUpdate = line.bidLastUpdate
+RETURN COUNT(*);
+

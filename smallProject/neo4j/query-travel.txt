@@ -1,0 +1,377 @@
+
+*****************after running two scripts in ch2************************************
+
+MATCH (source:City {name:"Los Angeles"})-[:HAS_FLIGHT]->(f:Flight)-[:FLYING_TO]->(destination:City {name:"New York"}) RETURN f.code as flight_code, f.carrier as carrier;
+
+MATCH path = (london:City{name:'London'})-[:HAS_FLIGHT|FLYING_TO*0..6]->(melbourne:City{name:'Melbourne'})
+ RETURN path;
+ 
+ MATCH path = (london:City{name:'London'})-[:HAS_FLIGHT|FLYING_TO*0..6]->(melbourne:City{name:'Melbourne'})
+WITH 
+FILTER(f in nodes(path) WHERE  "Flight" IN labels(f)) as flights, 
+FILTER(city in nodes(path) WHERE "City" IN labels(city)) as cities
+RETURN 
+EXTRACT(city IN cities| city.name) as city,
+EXTRACT (flight IN flights| flight.code) as code, 
+EXTRACT (flight IN flights| flight.carrier) as carrier,
+EXTRACT (flight IN flights| flight.departure) as departure,
+EXTRACT (flight IN flights| flight.arrival) as arrival,
+EXTRACT (flight IN flights| flight.duration) as duration,
+EXTRACT (flight IN flights| flight.source_airport_code) as from_airport,
+EXTRACT (flight IN flights| flight.destination_airport_code) as to_airport
+
+******************************run ch4 scripts users and booking*************************************
+
+MATCH (user:User{email:"mahesh.lal@gmail.com"})-[:MADE_BOOKING]->(:Booking)-[:HAS_JOURNEY]-(j:Journey)
+WHERE j.date_of_journey >=1418055307 
+WITH COLLECT(j) as journeys
+MATCH (j:Journey)-[:BY_FLIGHT]->(f:Flight)
+WHERE j in journeys
+WITH j.date_of_journey as date_of_journey, COLLECT(f) as flights
+MATCH (source:City)-[:HAS_FLIGHT]->(f)-[:FLYING_TO]->(destination:City)
+WHERE f in flights
+RETURN date_of_journey, source.name as from, f.code as by_flight, destination.name as to;
+
+
+***************************ch5 : step by step **********************************************
+CREATE CONSTRAINT ON (airport:Airport) ASSERT airport.code IS UNIQUE;
+
+MATCH (source:City)-[:HAS_FLIGHT]->(f:Flight)-[:FLYING_TO]->(destination:City)
+WITH source, f, destination
+MERGE (source_airport:Airport{code: f.source_airport_code})
+MERGE (destination_airport:Airport{code: f.destination_airport_code})
+WITH source, destination, source_airport, destination_airport
+MERGE (source)-[:HAS_AIRPORT]->(source_airport)
+MERGE (destination)-[:HAS_AIRPORT]->(destination_airport)
+RETURN source, destination, source_airport, destination_airport
+
+MATCH (f:Flight) 
+WITH f
+MATCH (source_airport:Airport{code:f.source_airport_code}), 
+(destination_airport:Airport{code:f.destination_airport_code})
+WITH  source_airport, destination_airport, f
+MERGE (source_airport)-[:HAS_FLIGHT]->(f)-[:FLYING_TO]->(destination_airport)
+RETURN source_airport, f, destination_airport
+
+MATCH (f:Flight)-[r]-(:City)
+DELETE r
+SET f.source_airport_code = null, f.destination_airport_code = null;
+
+MATCH path = (london:City{name:'London'})-[:HAS_AIRPORT]->(:Airport)-[:HAS_FLIGHT|FLYING_TO*0..6]->(:Airport)<-[:HAS_AIRPORT]-(melbourne:City{name:'Melbourne'})
+WITH 
+FILTER(f in nodes(path) WHERE  "Flight" IN labels(f)) as flights, 
+FILTER(city in nodes(path) WHERE "City" IN labels(city)) as cities, 
+FILTER(airport in nodes(path) WHERE "Airport" IN labels(airport)) as airports
+RETURN 
+EXTRACT(city IN cities| city.name) as city,
+EXTRACT (flight IN flights| flight.code) as code, 
+EXTRACT (flight IN flights| flight.carrier) as carrier,
+EXTRACT (flight IN flights| flight.departure) as departure,
+EXTRACT (flight IN flights| flight.arrival) as arrival,
+EXTRACT (flight IN flights| flight.duration) as duration,
+EXTRACT (airport IN airports| airport.code) as airport
+
+CREATE CONSTRAINT ON (hotel:Hotel) ASSERT hotel._id IS UNIQUE;
+
+CREATE (hotel:Hotel {_id:"6ad8ce6e-1c0e-11e5-8db1-6c40089a9424",  name:"Hilton", price: 180})
+WITH hotel
+MATCH (airport:Airport{code:"JFK"})
+WITH airport, hotel
+MERGE (airport)-[:HAS_HOTEL]->(hotel)
+RETURN airport, hotel;
+
+MATCH (airport:Airport)-[:HAS_HOTEL]->(hotel:Hotel) 
+WHERE airport.code IN ["JFK", "LAX"]
+RETURN airport.code, hotel.name, hotel.price;
+
+C:\HW\Neo4j\neo4j_graph_data_modelling\neo4j_graph_data_modelling-master\chapter_5\for_reader>type hotels.cqy |cypher-shell -u neo4j -p Admin123
+--format plain
+
+
+****************after adding more data
+MATCH (airport:Airport)-[:HAS_HOTEL]->(hotel:Hotel) 
+WHERE airport.code IN ["JFK", "LAX"]
+RETURN airport.code, hotel.name, hotel.price;
+
+************************ch6 step by step ****************************************
+CREATE CONSTRAINT ON (review:Review) ASSERT review._id IS UNIQUE;
+
+CREATE (review:Review{ _id:"d11f1d66-2331-11e5-ab8f-6c40089a9424", value_for_money: 2, comfort: 3, food: 4, service: 3, stayed_on: 1388670309.210871, created_on: 1391157765.857148, stay_year: 2014, stay_month: 1, stay_day: 2, description:"Was a comfortable stay. Could improve a lot though"}) 
+WITH review 
+MATCH (hotel:Hotel{_id: "19397f48-1c6f-11e5-8014-6c40089a9424"}), (user:User {email: "mahesh.lal@gmail.com"})
+WITH review, user, hotel MERGE (user)-[:WROTE]->(review)-[:FOR_HOTEL]->(hotel);
+
+MATCH (hotel:Hotel{_id:'19397f48-1c6f-11e5-8014-6c40089a9424'})<-[:FOR_HOTEL]-(review:Review)<-[:WROTE]-(user:User)
+WITH review, user, review.stayed_on as stayed ORDER BY stayed DESC
+RETURN review.value_for_money as value_for_money, review.comfort as comfort, review.food as food, review.service as service, review.stay_year as year, review.stay_month as month, review.stay_day as day, user.name as name;
+
+C:\HW\Neo4j\neo4j_graph_data_modelling\neo4j_graph_data_modelling-master\chapter_6\for_reader>type reviews.cqy |cypher-shell -u neo4j -p Admin123
+ --format plain
+ 
+MATCH (hotel:Hotel{_id:'19397f48-1c6f-11e5-8014-6c40089a9424'})<-[:FOR_HOTEL]-(review:Review)<-[:WROTE]-(user:User)
+WITH review, user, review.stayed_on as stayed ORDER BY stayed DESC
+RETURN review.value_for_money as value_for_money, review.comfort as comfort, review.food as food, review.service as service, review.stay_year as year, review.stay_month as month, review.stay_day as day, user.name as name;
+
+*******************run query 
+
+MATCH (city:City{name:"New York"})-[:HAS_AIRPORT]->(airport:Airport)-[:HAS_HOTEL]->(hotel:Hotel)<-[:FOR_HOTEL]-(review:Review)
+WITH DISTINCT hotel.name AS hotel_name, 
+COLLECT(review.comfort) AS comfort_ratings, 
+COLLECT(review.food) AS food_ratings, 
+COLLECT(review.service) AS service_ratings, 
+COLLECT(review.value_for_money) as vfm_ratings, 
+airport.code AS airport,
+COUNT(review) as total_reviews
+
+WITH 
+hotel_name, 
+tofloat(REDUCE(total = 0, rating in comfort_ratings | total + rating))/ total_reviews as comfort_rating,
+tofloat(REDUCE(total = 0, rating in food_ratings | total + rating))/ total_reviews as food_rating,
+tofloat(REDUCE(total = 0, rating in service_ratings | total + rating))/ total_reviews as service_rating,
+tofloat(REDUCE(total = 0, rating in vfm_ratings | total + rating))/ total_reviews as vfm_rating,
+airport, 
+total_reviews
+
+RETURN airport, 
+hotel_name, 
+comfort_rating, 
+service_rating, 
+food_rating, 
+vfm_rating, 
+(comfort_rating + service_rating + food_rating + vfm_rating)/4 as overall_rating
+ORDER BY overall_rating DESC
+
+*************************************************************************
+CREATE CONSTRAINT ON (comment:Comment) ASSERT comment._id IS UNIQUE;
+
+CREATE (comment:Comment{_id:"df23c188-2349-11e5-8966-6c40089a9424", text:"What was wrong with the service?", created_on: 1391550607.342643})
+WITH comment
+MATCH (review:Review{_id:"d120a06e-2331-11e5-bf11-6c40089a9424"}), (user:User{email:"mahesh.lal@gmail.com"})
+WITH review, user, comment
+MERGE (review)<-[:IN_REPLY_TO]-(comment)<-[:WROTE]-(user)
+RETURN review, comment, user
+
+CREATE (new_comment:Comment{_id:"a3da3c5c-2350-11e5-9006-6c40089a9424", text: "Some issues with the air conditioner which led to a sleepless night", created_on: 1391723407.342643})
+WITH new_comment
+MATCH (comment:Comment{_id:"df23c188-2349-11e5-8966-6c40089a9424"}), (user:User{email:"hale.orison@gmail.com"})
+MERGE (user)-[:WROTE]->(new_comment)-[:IN_REPLY_TO]->(comment)
+RETURN user, new_comment, comment
+
+CREATE (comment:Comment{_id:"1e0a80de-2353-11e5-86b5-6c40089a942", text:"Thanks for updating this.", created_on:1390686607.342643})
+WITH comment
+MATCH (review:Review{_id:"d120a06e-2331-11e5-bf11-6c40089a9424"}), (user:User{email:"elijah.b@gmail.com"})
+WITH review, user, comment
+MERGE (review)<-[:IN_REPLY_TO]-(comment)<-[:WROTE]-(user)
+RETURN review, comment, user
+
+MATCH p = (review:Review{_id:"d120a06e-2331-11e5-bf11-6c40089a9424"})<-[:IN_REPLY_TO*1..]-(comment:Comment)<-[:WROTE]-(user:User)
+RETURN p
+
+***********************ch7 step by step *****************************************************************
+CREATE CONSTRAINT ON (country:Country) ASSERT country.name IS UNIQUE; 
+ 
+MATCH (city:City)
+WITH city
+MERGE (country:Country{name: city.country})
+WITH country, city
+MERGE (country)-[:SUB_REGION]->(city)
+RETURN city, country
+
+CREATE CONSTRAINT ON (region:Region) ASSERT region.name IS UNIQUE;
+
+CREATE (region:Region{name:"North America"})
+WITH region
+MATCH (country:Country) WHERE country.name IN ["United States of America", "Canada"]
+MERGE (region)-[:SUB_REGION]->(country)
+RETURN region, country;
+
+MATCH path = (region:Region)-[:SUB_REGION*1..]->(city:City)-[:HAS_AIRPORT]->(airport:Airport)
+RETURN path
+
+MATCH (city {name: 'Singapore'}) REMOVE city.label RETURN city
+
+MATCH (city {name: 'Singapore'}) DELETE city
+
+MATCH (city {name: 'Singapore'}) DETACH DELETE city;
+
+MATCH (city:City), (country:Country) SET city :Region, country :Region;
+
+CREATE (chain:HotelChain{name:"Hilton Hotels"}) 
+WITH chain 
+MATCH (hotel:Hotel) WHERE hotel.name IN ["Hilton", "Double Tree"]
+MERGE (hotel)-[:BELONGS_TO]->(chain)
+RETURN hotel, chain;
+
+CREATE CONSTRAINT ON (chain:HotelChain) ASSERT chain.name IS UNIQUE;
+
+MATCH p = (region:Region)-[:SUB_REGION*1..]->(city:City)-[:HAS_AIRPORT]->(airport:Airport)-[:HAS_HOTEL]->(hotel:Hotel)-[:BELONGS_TO]->(hotelChain:HotelChain) 
+WITH p, hotelChain
+OPTIONAL MATCH (hotelChain)-[:BELONGS_TO]->(parent:HotelChain)
+RETURN 
+EXTRACT( node in FILTER(n in NODES(p) WHERE "Region" IN LABELS(n))| node.name) as region,
+EXTRACT( node in FILTER(n in NODES(p) WHERE "Country" IN LABELS(n))| node.name) as country,
+EXTRACT( node in FILTER(n in NODES(p) WHERE "City" IN LABELS(n))| node.name) as city,
+EXTRACT( node in FILTER(n in NODES(p) WHERE "Airport" IN LABELS(n))| node.code) as airport,
+EXTRACT( node in FILTER(n in NODES(p) WHERE "Hotel" IN LABELS(n))| node.name) as hotel,
+hotelChain.name as chain, parent.name as parentChain;
+
+CREATE CONSTRAINT ON (accessGroup:AccessGroup) ASSERT accessGroup._id IS UNIQUE;
+
+CREATE CONSTRAINT ON (accessGroup:AccessGroup) ASSERT accessGroup._id IS UNIQUE;
+
+MATCH (region:Region{name:"European Union"})-[:SUB_REGION*0..]->(:City)-[:HAS_AIRPORT]->(airport:Airport)-[:HAS_HOTEL]->(hotel:Hotel)-[:BELONGS_TO]->(chain:HotelChain{name:"Ibis Hotels"})
+WITH hotel, chain
+MERGE (accessGroup:AccessGroup{_id:"089cd024-249c-11e5-b902-6c40089a9424"}) ON CREATE SET accessGroup.name = "European Union"
+WITH chain, hotel, accessGroup
+CREATE UNIQUE (chain)-[:HAS_ACCESS_GROUP]->(accessGroup)-[:CAN_ACCESS]->(hotel)
+RETURN chain, accessGroup, hotel
+
+MATCH (subsidiaryAccessGroup:AccessGroup), (chain:HotelChain{name:"Accor Hotels"})
+WHERE subsidiaryAccessGroup._id IN ["7506082e-24a2-11e5-b62b-6c40089a9424","539487e2-24a2-11e5-bb1b-6c40089a9424","cef89d02-24a1-11e5-821c-6c40089a9424","089cd024-249c-11e5-b902-6c40089a9424"]
+WITH subsidiaryAccessGroup, chain
+MERGE (accessGroup:AccessGroup{_id:"57096838-24a3-11e5-87db-6c40089a9424"}) ON CREATE SET accessGroup.name = "European Union"
+WITH subsidiaryAccessGroup, accessGroup, chain
+CREATE UNIQUE (chain)-[:HAS_ACCESS_GROUP]->(accessGroup)-[:CAN_ACCESS]->(subsidiaryAccessGroup)
+WITH chain, accessGroup
+MATCH p = (chain)-[:HAS_ACCESS_GROUP]->(accessGroup)-[:CAN_ACCESS*1..]->(:Hotel)-[:BELONGS_TO]->(:HotelChain)
+RETURN p
+
+CREATE CONSTRAINT ON (emp:Employee) ASSERT emp._id IS UNIQUE;
+
+MATCH (chain:HotelChain{name:"Accor Hotels"}), (euAccess:AccessGroup{_id:"57096838-24a3-11e5-87db-6c40089a9424"})
+WITH chain, euAccess
+MERGE (employee:Employee{_id:17812}) ON CREATE SET employee.name = "Jeoffery Fraser"
+WITH employee, chain, euAccess
+CREATE UNIQUE (chain)<-[:EMPLOYED_BY]-(employee)-[:MEMBER_OF]->(euAccess)
+RETURN employee, euAccess, chain
+
+MATCH p = (chain:HotelChain)<-[:EMPLOYED_BY]-(employee:Employee{_id:17812})-[:MEMBER_OF]->(:AccessGroup)-[:CAN_ACCESS*0..]->(hotel:Hotel)-[:BELONGS_TO]->(hotelChain:HotelChain)
+WITH p, hotel
+MATCH (hotel)<-[:HAS_HOTEL]-(airport:Airport)<-[:HAS_AIRPORT]-(city:City)
+RETURN p, hotel, airport, city
+
+MATCH p = (chain:HotelChain)<-[:EMPLOYED_BY]-(employee:Employee{_id:78641})-[:MEMBER_OF]->(:AccessGroup)-[:CAN_ACCESS*0..]->(hotel:Hotel)-[:BELONGS_TO]->(hotelChain:HotelChain)
+WITH p, hotel
+MATCH (hotel)<-[:HAS_HOTEL]-(airport:Airport)<-[:HAS_AIRPORT]-(city:City)
+RETURN p, hotel, airport, city
+
+**********************run the scripts in ch7 **************************************************************************************
+C:\HW\Neo4j\neo4j_graph_data_modelling\neo4j_graph_data_modelling-master\chapter_7\for_reader>type accor_access_groups.cqy |cypher-shell -u neo4j
+ -p Admin123 --format plain
+
+C:\HW\Neo4j\neo4j_graph_data_modelling\neo4j_graph_data_modelling-master\chapter_7\for_reader>type accor_subsidiary_hotels_access_groups.cqy |cyp
+her-shell -u neo4j -p Admin123 --format plain
+
+C:\HW\Neo4j\neo4j_graph_data_modelling\neo4j_graph_data_modelling-master\chapter_7\for_reader>type employees.cqy |cypher-shell -u neo4j -p Admin1
+23 --format plain
+
+C:\HW\Neo4j\neo4j_graph_data_modelling\neo4j_graph_data_modelling-master\chapter_7\for_reader>dir
+ Volume in drive C is OSDisk
+ Volume Serial Number is 7822-0EFD
+
+ Directory of C:\HW\Neo4j\neo4j_graph_data_modelling\neo4j_graph_data_modelling-master\chapter_7\for_reader
+
+12/26/2016  03:03 AM    <DIR>          .
+12/26/2016  03:03 AM    <DIR>          ..
+12/26/2016  03:03 AM             1,962 accor_access_groups.cqy
+12/26/2016  03:03 AM             3,369 accor_subsidiary_hotels_access_groups.cqy
+12/26/2016  03:03 AM             1,879 employees.cqy
+12/26/2016  03:03 AM             3,802 hotel_chains.cqy
+12/26/2016  03:03 AM               870 regions.cqy
+               5 File(s)         11,882 bytes
+               2 Dir(s)  35,218,599,936 bytes free
+
+C:\HW\Neo4j\neo4j_graph_data_modelling\neo4j_graph_data_modelling-master\chapter_7\for_reader>type hotel_chains.cqy |cypher-shell -u neo4j -p Adm
+in123 --format plain
+
+hotel, chain
+(:Hotel {price: 80, name: "Ibis", _id: "938fc51c-1c6b-11e5-84ed-6c40089a9424"}), (:HotelChain {name: "Ibis Hotels"})
+(:Hotel {price: 90, name: "Ibis", _id: "26e0880a-1c6d-11e5-863b-6c40089a9424"}), (:HotelChain {name: "Ibis Hotels"})
+(:Hotel {price: 97, name: "Ibis", _id: "401b7c76-1c6d-11e5-9a52-6c40089a9424"}), (:HotelChain {name: "Ibis Hotels"})
+(:Hotel {price: 97, name: "Ibis", _id: "a6f82a02-1c6d-11e5-b664-6c40089a9424"}), (:HotelChain {name: "Ibis Hotels"})
+(:Hotel {price: 97, name: "Ibis", _id: "b56ce870-1c6d-11e5-9a3a-6c40089a9424"}), (:HotelChain {name: "Ibis Hotels"})
+hotel, chain
+(:Hotel {price: 120, name: "Novotel", _id: "37450b9e-1c6d-11e5-a7dd-6c40089a9424"}), (:HotelChain {name: "Novotel Hotels"})
+hotel, chain
+(:Hotel {price: 163, name: "Mercure", _id: "9935a782-1c6d-11e5-9fd9-6c40089a9424"}), (:HotelChain {name: "Mercure Hotels"})
+hotel, chain
+(:Hotel {price: 75, name: "Sofitel", _id: "f80d0c4c-1c6c-11e5-b5d3-6c40089a9424"}), (:HotelChain {name: "Sofitel Hotels"})
+(:Hotel {price: 79, name: "Sofitel", _id: "19b08fcc-1c6d-11e5-8638-6c40089a9424"}), (:HotelChain {name: "Sofitel Hotels"})
+(:Hotel {price: 78, name: "Sofitel", _id: "5640792c-1c6d-11e5-96a2-6c40089a9424"}), (:HotelChain {name: "Sofitel Hotels"})
+hotelChain, chain
+(:HotelChain {name: "Ibis Hotels"}), (:HotelChain {name: "Accor Hotels"})
+(:HotelChain {name: "Novotel Hotels"}), (:HotelChain {name: "Accor Hotels"})
+(:HotelChain {name: "Mercure Hotels"}), (:HotelChain {name: "Accor Hotels"})
+(:HotelChain {name: "Sofitel Hotels"}), (:HotelChain {name: "Accor Hotels"})
+Node(2120) already exists with label `HotelChain` and property `name` = 'Hilton Hotels'
+
+C:\HW\Neo4j\neo4j_graph_data_modelling\neo4j_graph_data_modelling-master\chapter_7\for_reader>dir
+ Volume in drive C is OSDisk
+ Volume Serial Number is 7822-0EFD
+
+ Directory of C:\HW\Neo4j\neo4j_graph_data_modelling\neo4j_graph_data_modelling-master\chapter_7\for_reader
+
+12/26/2016  03:03 AM    <DIR>          .
+12/26/2016  03:03 AM    <DIR>          ..
+12/26/2016  03:03 AM             1,962 accor_access_groups.cqy
+12/26/2016  03:03 AM             3,369 accor_subsidiary_hotels_access_groups.cqy
+12/26/2016  03:03 AM             1,879 employees.cqy
+12/26/2016  03:03 AM             3,802 hotel_chains.cqy
+12/26/2016  03:03 AM               870 regions.cqy
+               5 File(s)         11,882 bytes
+               2 Dir(s)  35,218,169,856 bytes free
+
+C:\HW\Neo4j\neo4j_graph_data_modelling\neo4j_graph_data_modelling-master\chapter_7\for_reader>type regions.cqy |cypher-shell -u neo4j -p Admin123
+ --format plain
+
+Node(2119) already exists with label `Region` and property `name` = 'North America'
+
+C:\HW\Neo4j\neo4j_graph_data_modelling\neo4j_graph_data_modelling-master\chapter_7\for_reader>type regions.cqy |cypher-shell -u neo4j -p Admin123
+ --format plain
+
+region, country
+(:Region {name: "Asia"}), (:Country {name: "India"})
+(:Region {name: "Asia"}), (:Country {name: "Turkey"})
+(:Region {name: "Asia"}), (:Country {name: "Singapore"})
+region, country
+(:Region {name: "European Union"}), (:Country {name: "Greece"})
+(:Region {name: "European Union"}), (:Country {name: "Spain"})
+(:Region {name: "European Union"}), (:Country {name: "United Kingdom"})
+(:Region {name: "European Union"}), (:Country {name: "Italy"})
+(:Region {name: "European Union"}), (:Country {name: "France"})
+region, country
+(:Region {name: "Australia"}), (:Country {name: "Australia"})
+
+C:\HW\Neo4j\neo4j_graph_data_modelling\neo4j_graph_data_modelling-master\chapter_7\for_reader>
+
+*************************run the query again **********************************************
+
+**********************************ch8 *************************************************************
+CREATE CONSTRAINT ON (c:Category) ASSERT c.name IS UNIQUE;
+CREATE (c:Category{name:"Streets",  description: "Cities where there is a rich street art, street food etc."}) RETURN c;
+MATCH (n:City{name:"Mumbai"}), (c:Category{name:"Cosmopolitan Hotspot"}) CREATE UNIQUE (n)-[:KNOWN_FOR]->(c);
+
+MATCH (passenger:Passenger{email:"vishal.p@gmail.com"})<-[:HAS_PASSENGER]-(b:Booking)-[:HAS_JOURNEY]->(:Journey)-[:BY_FLIGHT]->(:Flight)-[r]-(airport:Airport)
+WITH DISTINCT b AS original_booking, COLLECT(airport) AS airports, passenger
+WITH original_booking, FILTER(airport IN airports WHERE 1=LENGTH(FILTER(a IN airports WHERE a=airport))) AS distinct_airports, passenger
+MATCH (airport:Airport)<-[:HAS_AIRPORT]-(city:City)
+WHERE airport IN distinct_airports
+RETURN  DISTINCT city.name;
+
+MATCH (passenger:Passenger{email:"vishal.p@gmail.com"})<-[:HAS_PASSENGER]-(b:Booking)-[:HAS_JOURNEY]->(:Journey)-[:BY_FLIGHT]->(:Flight)-[r]-(airport:Airport)
+WITH DISTINCT b AS original_booking, COLLECT(airport) AS airports, passenger
+WITH original_booking, FILTER(airport IN airports WHERE 1=LENGTH(FILTER(a IN airports WHERE a=airport))) AS distinct_airports, passenger
+MATCH (airport:Airport)<-[:HAS_AIRPORT]-(city:City)
+WHERE airport IN distinct_airports
+WITH DISTINCT city
+MATCH (city)-[:KNOWN_FOR]->(category:Category)
+WITH DISTINCT category, COUNT(category) as relevance, COLLECT(city) as cities ORDER BY relevance DESC
+MATCH (other_city:City)-[:KNOWN_FOR]->(category)
+WHERE NOT other_city IN cities
+RETURN DISTINCT other_city.name, COLLECT(category.name), COUNT(category.name) as relevance ORDER BY relevance DESC
+
+
+
+****************Cleanup*********************************
+MATCH (n) DETACH DELETE n
+MATCH (n) RETURN n

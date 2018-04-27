@@ -1,0 +1,40 @@
+--get all nodes count
+
+start n=node(*)
+ match (n)
+ return count(n)
+ 
+---
+MATCH (o: Opportunity)-[:HAS_BID]->(b:Bid)
+ WHERE o.OppID = 300000000000000 and b.BidAmount >7000000
+ RETURN b.BidName, b.BidAmount;
+ 
+---
+ MATCH (o: Opportunity)-[:HAS_RIG]->(r:Rig)
+ WHERE o.OppID = 300000000000000 
+  RETURN o.OppName, r.RigName;
+ 
+----
+ MATCH (o: Opportunity)-[:HAS_VESSEL]->(v:Vessel)
+ WHERE o.OppID = 300000000000000 
+  RETURN o.OppName, v.VesselName;
+----
+
+start n=node(*)
+match n-[:HAS_BID]-()
+return distinct n
+
+----
+
+MATCH (o: Opportunity)-[:HAS_BID]->(b:Bid) where [:HAS_BID] is null return o
+
+---
+ 
+ MATCH (o: Opportunity)-[:HAS_BID]->(b:Bid)
+ WHERE o.OppID = 300000000000000 and b.BidAmount >7000000
+ RETURN b.BidName, b.BidAmount;
+ 
+ ---delete all nodes
+ MATCH (n) DETACH DELETE n
+ 
+ ---
