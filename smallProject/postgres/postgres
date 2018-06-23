@@ -1,1 +1,20 @@
-this is for postgres app
+#this is for postgres app, setup env notes 
+
+1. using ubuntu as a server
+check software list on server
+cat /etc/apt/sources.list
+
+2. #update and upgrade packages (check packages.ubuntu.com)
+sodu apt-get update 
+sudo apt-get upgrade
+
+3. #always using man, eg man apt-get
+sudo apt-get install finger
+
+4. goto https://packages.ubuntu.com to search packages for  apache http server, postgreSQL, memcache
+apache2, 
+
+5. goto http://blog.yingyouli.com/2018/06/setup-env-for-postgresql-app-on-ubuntu.html#more for more details
+
+
+
