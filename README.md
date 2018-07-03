@@ -1,8 +1,8 @@
 # Algorithm + Data Structure = software programming (simply saying)
 
-# Abstraction, Encapsulation, Modularisation, and Hierarchy (fundamental software design principles)
+### Abstraction, Encapsulation, Modularisation, and Hierarchy (fundamental software design principles)
 
-# A template or pattern describing a solution to a common problem is known as a design pattern. The reuse of such patterns can help speed up the software development process
+### A template or pattern describing a solution to a common problem is known as a design pattern. The reuse of such patterns can help speed up the software development process
 
 There are all data structures available on Python.org
 
