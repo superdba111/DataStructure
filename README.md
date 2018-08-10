@@ -1,6 +1,6 @@
 ## Algorithm + Data Structure = software programming (simply saying)
 
-follow https://12factor.net/ for 12 factors 
+follow https://12factor.net/ for 12 factors ; http://www.charleshooper.net/blog/briefly-operator-requirements/
 
 ### Abstraction, Encapsulation, Modularisation, and Hierarchy (fundamental software design principles)
 
