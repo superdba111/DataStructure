@@ -1,5 +1,7 @@
 ## Algorithm + Data Structure = software programming (simply saying)
 
+check https://12factor.net/ for 12 factors 
+
 ### Abstraction, Encapsulation, Modularisation, and Hierarchy (fundamental software design principles)
 
 ### A template or pattern describing a solution to a common problem is known as a design pattern. The reuse of such patterns can help speed up the software development process; You can view "Data structure" as "common data pattern"
