@@ -16,4 +16,6 @@ Here are just for practices on data structure concepts
 
 In order to coding well, think about the following, 1. Efficiency. 2. Memory space, 3 Bug free with a complete testing cases
 
+4. make your code as genetic and lazy computing as possible 5. readable--write good comments 6. reuse code/cache 
+
 
