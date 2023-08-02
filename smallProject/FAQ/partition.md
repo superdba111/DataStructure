@@ -1,3 +1,5 @@
+here is the link ---https://github.com/superdba111/DataStructure/blob/master/smallProject/FAQ/AWS%20PostgreSQL%20RDS.pdf
+
 Partitioning is the process of logically splitting one large table into smaller physical ones. In scenarios where over a period of time, say the size of your PostgreSQL table grows , every operation on that table gets expensive and may lead to serious performance issues. The size of the partition depends on the partition key. The basic idea is when you INSERT or UPDATE on a partitioned table, the database engine routes the data to the appropriate partition (child tables of the main table) and during database query reads, the PostgreSQL optimizer examines the WHERE clause of the query and directs the database scan to only the relevant partitions, thus maintaining the data within the database along with less overall resource utilization.
 
 There are certain considerations to be taken before deciding on implementing partitioning within your database as it involves certain level of complexity. Scenarios where partitioning might be a good fit are as follows:
