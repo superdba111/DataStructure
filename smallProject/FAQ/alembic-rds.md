@@ -26,8 +26,6 @@ You'll also need to set up the env.py file within the alembic folder to tell Ale
 
 alembic/env.py:
 
-python
-Copy code
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
@@ -99,6 +97,8 @@ if context.is_offline_mode():
     run_migrations_offline()
 else:
     run_migrations_online()
+
+
 Create a migration script - Migration scripts are like a version history for your database. They contain instructions for how to get your database to a certain state.
 You can create a new migration script with:
 
