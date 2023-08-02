@@ -13,7 +13,7 @@ Regular and consistent backups are crucial to data integrity. AWS RDS provides a
 Transaction logs help maintain data integrity by ensuring that database operations can be rolled back if needed. AWS RDS automatically backs up these logs as part of automated backups.
 
 ### Data Validation Checks: 
-Implement data validation at both the application level and the database level to ensure that only the correct types of data are stored.
+Implement data validation at both the application level and the database level to ensure that only the correct types of data are stored. one link for ref, https://github.com/superdba111/2023-pandera
 
 ### DynamoDB: 
 For NoSQL databases, DynamoDB is a great option. It provides built-in support for ACID transactions, ensuring data integrity. Also, DynamoDB Global Tables provide a fully managed solution for deploying a multi-region, multi-master database, which helps in maintaining high availability.
