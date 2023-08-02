@@ -12,4 +12,9 @@ Securing data in transit: RDS Proxy automatically uses SSL for connections to RD
 
 Saving costs: Since the proxy manages and reuses connections, you might not need as many resources on the actual database, potentially lowering costs.
 
+There may be cases where transactions on a client session rely on state information from previous requests, due to which it would no longer be safe to execute transactions across different database cnonections. This results in a decrease in multiplexing on the proxy. A simple example for this is a session variable or configuration parameter that is set on session initialization to be used by all transactions for that session/request.
+
+In such cases, the proxy decides to pin the client connection to a specific DB connection with the changed state as it may be required for future transactions, and the proxy can enter a state known as pinning. When RDS Proxy processes requests to change session variables or configuration settings, it pins that session to the DB connection.
+Pinning can reduce the efficiency of connection re-use on the proxy and under heavy load can also cause the application to see longer connection establishment times, connection timeouts and even 'Too many connections' errors in some cases. Review your application code and make sure that there are no pinning statements being used in order to get the maximum performance advantages of RDS Proxy.
+
 Before implementing RDS Proxy, keep in mind the additional latency it might introduce due to an extra network hop. For applications that require minimal latency, this might be a factor to consider.
