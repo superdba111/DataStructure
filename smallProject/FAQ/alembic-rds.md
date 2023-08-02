@@ -7,14 +7,11 @@ Here's a basic example:
 Set up your environment - You'll need to have Python, pip, a PostgreSQL server, and the necessary Python libraries installed.
 You can install the necessary libraries with pip:
 
-bash
-Copy code
+
 pip install alembic sqlalchemy psycopg2-binary
 Configure Alembic - You'll need to create an alembic.ini file, which Alembic will use to determine how to interact with your database.
 alembic.ini:
 
-ini
-Copy code
 [alembic]
 script_location = alembic
 
