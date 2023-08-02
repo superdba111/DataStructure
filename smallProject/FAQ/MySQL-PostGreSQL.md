@@ -1,6 +1,6 @@
 When to choose PostgreSQL or MySQL for your AWS RDS depends largely on the specific requirements of your application and your team's familiarity with these technologies. Here are some key considerations:
 
-PostgreSQL:
+PostgreSQL: (https://github.com/superdba111/blog)
 
 You should opt for PostgreSQL if your system requires complex queries, extensive data computations, and you need a highly customizable and extensible DBMS.
 PostgreSQL supports a larger part of the SQL standard and offers many modern features: complex queries, foreign keys, triggers, views, transactional integrity, multiversion concurrency control.
