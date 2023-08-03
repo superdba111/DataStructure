@@ -1,3 +1,9 @@
+In Python, @staticmethod is a decorator that can be applied to a function in a class, making it a static method. A static method doesn't depend on the state of the object itself and doesn't change the object's state either. This means that the method can be called on the class itself, rather than on an instance of the class.
+
+The purpose of a static method is to group a utility function with a class, where the function relates to the class in some way, but does not need to access or modify the class or instance in any way. They are typically used for utility functions that don't depend on any instance or class variable.
+
+In the AddData class, create_sample_data(tx) is decorated with @staticmethod because it doesn't access or modify any instance or class variables. It's grouped with the class because it's a utility function that's used in the context of adding data, but it could actually be run independently of any particular instance of the class.
+
 Here's a breakdown of the methods in the AuctionApp class:
 
 __init__(self, uri, user, password): This is the constructor method for the class. When an instance of the AuctionApp class is created, this method is called with the provided arguments. It initializes a new Neo4j driver with the specified URI, username, and password. This driver allows the application to communicate with the Neo4j database.
