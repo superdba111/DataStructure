@@ -1,3 +1,5 @@
+![image](https://github.com/superdba111/DataStructure/assets/31944577/3b226aa3-d784-47b0-a95d-9ed64dba8fa4)
+
 
 Designing a graph for a car auction bidding system is a critical process. Here is a step-by-step process:
 
