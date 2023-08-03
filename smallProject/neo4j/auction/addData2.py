@@ -142,6 +142,6 @@ class AddData:
 
 if __name__ == "__main__":
     # MATCH (n) DETACH DELETE n
-    data = AddData("bolt://localhost:7687", "neo4j", "SmileMax321")
+    data = AddData("bolt://localhost:7687", "neo4j", "password")
     data.add_data()
     data.close()
