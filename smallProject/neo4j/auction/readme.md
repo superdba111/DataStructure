@@ -19,3 +19,24 @@ highest_bid(self, car_make): This method returns the highest bid amount for cars
 highest_bidder(self, car_make): This method returns the user who has placed the highest bid for cars of a particular make. It finds all "BID" relationships from "User" nodes to "Car" nodes of the specified make, orders them in descending order of bid amount, and returns the user who has placed the highest bid.
 
 The main() function outside the class is the entry point of the program. It creates an instance of AuctionApp, calls its methods to place bids and retrieve information about auctions, and prints the results.
+
+The output --->
+
+python mytestapp.py                                          ✔  myproject  
+Available auctions:
+Traceback (most recent call last):
+  File "/Users/mli/Documents/AWS/demo/auction/neo4japp/myproject/mytestapp.py", line 93, in <module>
+    main()
+  File "/Users/mli/Documents/AWS/demo/auction/neo4japp/myproject/mytestapp.py", line 73, in main
+ ~/Doc/A/d/a/n/myproject  python mytestapp.py                                          ✔  myproject  
+Available auctions:
+[{'year': 2020, 'model': 'Corolla', 'id': 'car1', 'make': 'Toyota'}, {'year': 2019, 'model': 'Civic', 'id': 'car2', 'make': 'Honda'}]
+Placing bids...
+Getting highest bid for Toyota:
+20000
+Getting highest bid for Honda:
+21000
+Getting highest bidder for Toyota:
+user1
+Getting highest bidder for Honda:
+user2
