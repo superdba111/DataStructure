@@ -5,6 +5,14 @@ Designing a graph for a car auction bidding system is a critical process. Here i
 
 In the context of a car auction bidding system, entities might include: 1, Users 2, Cars 3, Bids 4, Auctions
 
+If each car is not a separate auction, then an Auction entity becomes more relevant. This would typically be used in a situation where multiple cars (or other items) are being auctioned off at a single event.
+
+User: An individual who can place bids.
+Car: An item being auctioned off.
+Bid: Represents a user's bid on a car.
+Auction: A particular event where cars are being auctioned off.
+
+
 ### Define relationships: 
 
 Each entity will be related to others in specific ways. In this context, you could define the following relationships:
@@ -13,6 +21,14 @@ Each entity will be related to others in specific ways. In this context, you cou
 2, Bids ARE_PLACED_ON Cars
 3, Cars ARE_IN Auctions
 4, Users WIN Cars
+
+(2nd cases: The relationships could look something like this:
+
+Users PLACE Bids.
+Bids ARE_PLACED_ON Cars.
+Cars ARE_IN Auctions.
+Users ATTEND Auctions.
+This way, an Auction becomes an event that Users attend and where Cars are sold. Bids are placed by Users on Cars, but the relationship of the Car to the Auction remains clear.)
 
 ### Define properties: 
 
