@@ -48,7 +48,7 @@ class AuctionApp:
 def main():
     uri = "bolt://localhost:7687"
     user = "neo4j"
-    password = "SmileMax321"  # Change this to your Neo4j password
+    password = "neo4j"  # Change this to your Neo4j password
 
     app = AuctionApp(uri, user, password)
     print("Available auctions:")
