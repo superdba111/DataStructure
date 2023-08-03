@@ -1,5 +1,5 @@
 
-Designing a graph for a car auction bidding system is a critical process. Here is a step-by-step process of how you can do this:
+Designing a graph for a car auction bidding system is a critical process. Here is a step-by-step process:
 
 Identify entities: In the context of a car auction bidding system, entities might include:
 
