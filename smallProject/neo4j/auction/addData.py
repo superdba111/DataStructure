@@ -38,7 +38,7 @@ class AddData:
 
 uri = "bolt://localhost:7687"
 user = "neo4j"
-password = "SmileMax321"  # Change this to your Neo4j password
+password = "neo4j"  # Change this to your Neo4j password
 
 add_data = AddData(uri, user, password)
 with add_data._driver.session() as session:
