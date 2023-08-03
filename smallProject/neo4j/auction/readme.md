@@ -1,19 +1,22 @@
 
 Designing a graph for a car auction bidding system is a critical process. Here is a step-by-step process:
 
-Identify entities: In the context of a car auction bidding system, entities might include:
+### Identify entities: 
 
-Users
-Cars
-Bids
-Auctions
-Define relationships: Each entity will be related to others in specific ways. In this context, you could define the following relationships:
+In the context of a car auction bidding system, entities might include: 1, Users 2, Cars 3, Bids 4, Auctions
 
-Users PLACE Bids
-Bids ARE_PLACED_ON Cars
-Cars ARE_IN Auctions
-Users WIN Cars
-Define properties: Each entity and relationship can also have properties associated with it. For instance:
+### Define relationships: 
+
+Each entity will be related to others in specific ways. In this context, you could define the following relationships:
+
+1, Users PLACE Bids
+2, Bids ARE_PLACED_ON Cars
+3, Cars ARE_IN Auctions
+4, Users WIN Cars
+
+### Define properties: 
+
+Each entity and relationship can also have properties associated with it. For instance:
 
 User: userID, name, contact_info, etc.
 Car: carID, make, model, year, etc.
@@ -23,7 +26,9 @@ PLACE: timestamp
 ARE_PLACED_ON: timestamp
 ARE_IN: timestamp
 WIN: timestamp
-Create the graph schema: Once the entities, relationships, and properties have been defined, you can create a graph schema.
+
+### Create the graph schema: 
+Once the entities, relationships, and properties have been defined, you can create a graph schema.
 
 In Python, @staticmethod is a decorator that can be applied to a function in a class, making it a static method. A static method doesn't depend on the state of the object itself and doesn't change the object's state either. This means that the method can be called on the class itself, rather than on an instance of the class.
 
