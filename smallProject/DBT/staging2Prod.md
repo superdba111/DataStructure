@@ -5,17 +5,8 @@ Here’s a detailed breakdown of using dbt with the staging and production conce
 ### 1. Set Up dbt Models Directory for Staging and Production:
 Your dbt project's models directory will store the SQL models. You can organize it further into sub-directories for clarity:
 
-models/
-│
-├── staging/
-│   ├── stg_users.sql
-│   ├── stg_orders.sql
-│   └── ...
-│
-└── production/
-    ├── fact_sales.sql
-    ├── dim_date.sql
-    └── ...
+![image](https://github.com/superdba111/DataStructure/assets/31944577/4d7ed350-ea0c-464c-9960-7ceb2ff5bfd9)
+
 
 ### 2. Staging:
 a. Create Staging Models:
