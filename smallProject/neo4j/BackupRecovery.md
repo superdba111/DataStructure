@@ -1,4 +1,4 @@
-Backup Process:
+### Backup Process:
 
 Stop Neo4j Database:
 Before taking a backup, it's essential to stop the Neo4j database to ensure data consistency during the backup process. You can use the following command to stop the Neo4j service: 
@@ -37,7 +37,7 @@ Online Backup Process:
 Choose Backup Location:
 Similar to the offline backup process, decide where you want to store the backup files. Again, it's recommended to use a location separate from the actual Neo4j data directory.
 
-Perform Online Backup:
+### Perform Online Backup:
 Use the neo4j-admin tool to perform an online backup. The command should look like this: neo4j-admin backup --backup-dir=/path/to/backup/directory --database=graph.db --name=mybackup
 --backup-dir: Specify the path to the directory where you want to store the backup.
 --database: Specify the name of the database you want to back up.
@@ -45,7 +45,7 @@ Use the neo4j-admin tool to perform an online backup. The command should look li
 Monitor Progress:
 The online backup process can be monitored using the neo4j-admin backup command itself. It will display progress and relevant information during the backup process.
 
-Incremental Backups:
+### Incremental Backups:
 
 Neo4j also supports incremental backups, which can be especially useful for large databases. Incremental backups capture only the changes made since the last backup, reducing the backup time and storage requirements.
 
