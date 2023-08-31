@@ -26,7 +26,8 @@ If your graph data has timestamps, you can engineer features based on temporal p
 
 Here's a very simplified example of calculating a node's degree centrality in Neo4j and using it as a feature:
 
-// Calculate degree centrality for each node
+### Calculate degree centrality for each node
+
 MATCH (n)
 WITH n, size((n)--()) AS degreeCentrality
 SET n.degreeCentrality = degreeCentrality;
