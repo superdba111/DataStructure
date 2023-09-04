@@ -32,5 +32,5 @@ helm status neo4j-cluster
 To upgrade the Neo4j cluster with new configurations or versions:
 helm upgrade neo4j-cluster neo4j/neo4j -f updated-values.yaml
 
-Ref: https://github.com/neo4j-contrib/neo4j-helm
+Ref: https://github.com/neo4j-contrib/neo4j-helm <br>
 https://neo4j.com/docs/operations-manual/current/tools/neo4j-admin/#neo4j-admin-introduction
