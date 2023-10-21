@@ -16,6 +16,9 @@ run pop-s3.py locally
 
 Run rearc-oct notebook locally
 
+![image](https://github.com/superdba111/DataStructure/assets/31944577/77f4cfc2-568d-4021-87a7-bb043a37e48b)
+
+
 ### Part 4: Iac & Data Pipeline with AWS CDK
 
 ![image](https://github.com/superdba111/DataStructure/assets/31944577/05250cb4-6372-47ea-ac51-3e7f2ab95935)
