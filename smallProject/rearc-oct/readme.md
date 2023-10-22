@@ -35,7 +35,8 @@ in cloudWatch, you can see the logging
 Run terraform and created all resources and data pipeline (two lambda functions)
 
 ![image](https://github.com/superdba111/DataStructure/assets/31944577/09f8ceb6-f5f3-4113-a2ee-be47b9164609)
-![image](https://github.com/superdba111/DataStructure/assets/31944577/a8e7dfad-35bd-4cb5-9c94-757eb40c375f)
+![image](https://github.com/superdba111/DataStructure/assets/31944577/90c55ba3-14c0-49ad-9adf-ac519f8cd55e)
+
 
 
 
