@@ -35,7 +35,8 @@ in cloudWatch, you can see the logging
 Run terraform and created all resources and data pipeline (two lambda functions)
 
 ![image](https://github.com/superdba111/DataStructure/assets/31944577/c04a5dcf-1537-4918-acf0-bd175e13baa1)
-![image](https://github.com/superdba111/DataStructure/assets/31944577/e06dd62f-8537-42ce-823c-1926598eecaf)
+![image](https://github.com/superdba111/DataStructure/assets/31944577/4bfb6e23-37f4-460c-95cf-58155fa8baf6)
+
 
 
 ### Part 5: Verify after IaC
