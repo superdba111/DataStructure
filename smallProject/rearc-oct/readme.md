@@ -51,7 +51,8 @@ Report Logging
 IAM
 ![image](https://github.com/superdba111/DataStructure/assets/31944577/bf39143d-473e-410e-bda9-d7af0b576b32)
 SQS
-![image](https://github.com/superdba111/DataStructure/assets/31944577/f56b2209-8c22-44fa-8bff-476e2410c2df)
+![image](https://github.com/superdba111/DataStructure/assets/31944577/c76fdeb1-7d7b-4c3c-9a36-b8eded6d094d)
+
 
 
 
