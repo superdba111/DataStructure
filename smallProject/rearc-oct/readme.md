@@ -39,11 +39,15 @@ Run terraform and created all resources and data pipeline (two lambda functions)
 
 ### Part 5: Verify after IaC
 Bucket, 
-![image](https://github.com/superdba111/DataStructure/assets/31944577/0412d39e-b5ec-4fb2-b0ef-b46e8cdbf8d3)
+![image](https://github.com/superdba111/DataStructure/assets/31944577/08a10530-50fb-4484-95ba-a809612cd974)
+![image](https://github.com/superdba111/DataStructure/assets/31944577/d36e67a7-d5e9-4b70-be88-9f7c1ee35806)
+
 EventBridge
 ![image](https://github.com/superdba111/DataStructure/assets/31944577/b209caa4-1209-4ce5-96ae-b1b507412abb)
 Lambda
-![image](https://github.com/superdba111/DataStructure/assets/31944577/68ae2e6b-d689-4730-b51f-aa39435f8b49)
+![image](https://github.com/superdba111/DataStructure/assets/31944577/d5a734d5-2d21-4c99-89b5-ac59e838a504)
+![image](https://github.com/superdba111/DataStructure/assets/31944577/19e4aa74-530c-45fa-bdcd-0260a59c980c)
+
 Data
 ![image](https://github.com/superdba111/DataStructure/assets/31944577/ed7afe63-0988-4af1-a182-69bdaf44b3e0)
 Report Logging
