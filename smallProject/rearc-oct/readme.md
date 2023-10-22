@@ -19,7 +19,7 @@ Run rearc-oct notebook locally
 ![image](https://github.com/superdba111/DataStructure/assets/31944577/77f4cfc2-568d-4021-87a7-bb043a37e48b)
 
 
-### Part 4: Iac & Data Pipeline with AWS CDK
+### Part 4: Iac & Data Pipeline 
 
 loaddata lambda function using zip package layer
 ![image](https://github.com/superdba111/DataStructure/assets/31944577/05250cb4-6372-47ea-ac51-3e7f2ab95935)
@@ -31,6 +31,13 @@ reports using docker images
 in cloudWatch, you can see the logging
 
 ![image](https://github.com/superdba111/DataStructure/assets/31944577/f6929599-544e-4cec-be34-8b0499073f0e)
+
+Run terraform and created all resources and data pipeline (two lambda functions)
+
+![image](https://github.com/superdba111/DataStructure/assets/31944577/09f8ceb6-f5f3-4113-a2ee-be47b9164609)
+![image](https://github.com/superdba111/DataStructure/assets/31944577/a8e7dfad-35bd-4cb5-9c94-757eb40c375f)
+
+
 
 
 
