@@ -21,7 +21,19 @@ Run rearc-oct notebook locally
 
 ### Part 4: Iac & Data Pipeline with AWS CDK
 
+loaddata lambda function using zip package layer
 ![image](https://github.com/superdba111/DataStructure/assets/31944577/05250cb4-6372-47ea-ac51-3e7f2ab95935)
+
+reports using docker images
+
+![image](https://github.com/superdba111/DataStructure/assets/31944577/0215bb5d-67d0-4c65-88e5-df002ec4bca1)
+
+in cloudWatch, you can see the logging
+
+![image](https://github.com/superdba111/DataStructure/assets/31944577/f6929599-544e-4cec-be34-8b0499073f0e)
+
+
+
 
 
 
